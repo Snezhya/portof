@@ -1,70 +1,106 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const InteractiveFire = () => {
-  const [butterflies, setButterflies] = useState([]);
+  const [particles, setParticles] = useState([]);
+  const containerRef = useRef(null);
 
-  const spawnButterfly = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const newButterfly = {
+  const createParticle = (x, y) => {
+    const newParticle = {
       id: Date.now() + Math.random(),
       x,
       y,
-      angle: Math.random() * 360,
+      size: Math.random() * 15 + 5,
+      angle: (Math.random() - 0.5) * 60,
     };
-
-    setButterflies(prev => [...prev, newButterfly]);
+    setParticles(prev => [...prev.slice(-20), newParticle]);
+    
     setTimeout(() => {
-      setButterflies(prev => prev.filter(b => b.id !== newButterfly.id));
-    }, 2000);
+      setParticles(prev => prev.filter(p => p.id !== newParticle.id));
+    }, 1000);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    // Throttle particle creation slightly
+    if (Math.random() > 0.5) {
+      createParticle(x, y);
+    }
+  };
+
+  const handleDrag = (e, info) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = info.point.x - rect.left;
+    const y = info.point.y - rect.top;
+    createParticle(x, y);
+    createParticle(x + 10, y + 10);
   };
 
   return (
     <section className="py-24 px-8 md:px-[10%] bg-hu-bg relative overflow-hidden z-10 flex flex-col items-center justify-center border-y border-[rgba(212,175,55,0.1)]">
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-        className="max-w-3xl text-center space-y-6"
+        className="max-w-3xl text-center space-y-6 w-full"
       >
         <h2 className="text-3xl md:text-4xl font-poppins font-bold text-hu-gold mb-4">
-          Guide to the Afterlife
+          Spirit <span className="text-hu-glow">Realm</span>
         </h2>
         <p className="text-gray-300 text-lg">
-          Click inside the box below to summon spirit butterflies.
+          Hover over or drag the artifact to ignite the spirit flame.
         </p>
         
         <div 
-          onClick={spawnButterfly}
-          className="relative w-full max-w-2xl mx-auto h-64 mt-10 rounded-2xl border-2 border-dashed border-hu-glow/50 bg-[rgba(107,15,26,0.1)] cursor-crosshair overflow-hidden shadow-[inset_0_0_30px_rgba(217,56,58,0.2)] hover:border-hu-gold/50 transition-colors"
+          ref={containerRef}
+          onMouseMove={handleMouseMove}
+          className="relative w-full max-w-2xl mx-auto h-80 mt-10 rounded-2xl border border-[rgba(212,175,55,0.2)] bg-[rgba(10,5,5,0.8)] overflow-hidden shadow-[inset_0_0_30px_rgba(217,56,58,0.1)] flex items-center justify-center"
         >
+          {/* Particles */}
           <AnimatePresence>
-            {butterflies.map(b => (
+            {particles.map(p => (
               <motion.div
-                key={b.id}
-                initial={{ opacity: 0, x: b.x, y: b.y, scale: 0, rotate: b.angle }}
+                key={p.id}
+                initial={{ opacity: 0.8, x: p.x, y: p.y, scale: 1, rotate: 0 }}
                 animate={{ 
-                  opacity: [0, 1, 0], 
-                  scale: [0.5, 1.5, 0.8], 
-                  y: b.y - 150, 
-                  x: b.x + (Math.random() > 0.5 ? 50 : -50),
-                  rotate: b.angle + 90
+                  opacity: 0, 
+                  scale: 0, 
+                  y: p.y - 100 - Math.random() * 50, 
+                  x: p.x + p.angle,
+                  rotate: p.angle * 2
                 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 2, ease: "easeOut" }}
-                className="absolute w-8 h-8 pointer-events-none"
-              >
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2C12 2 5 8 5 14C5 17.866 8.13401 21 12 21C15.866 21 19 17.866 19 14C19 8 12 2 12 2Z" fill="#d9383a" fillOpacity="0.8" />
-                  <path d="M12 2C12 2 8 8 8 13C8 15.2091 9.79086 17 12 17C14.2091 17 16 15.2091 16 13C16 8 12 2 12 2Z" fill="#d4af37" />
-                </svg>
-              </motion.div>
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="absolute pointer-events-none rounded-full blur-[2px]"
+                style={{
+                  width: p.size,
+                  height: p.size,
+                  background: Math.random() > 0.5 ? '#d9383a' : '#d4af37',
+                  boxShadow: `0 0 ${p.size * 2}px ${Math.random() > 0.5 ? '#d9383a' : '#d4af37'}`,
+                }}
+              />
             ))}
           </AnimatePresence>
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30 text-hu-glow font-fira text-sm">
-            [ Click to Interact ]
-          </div>
+
+          {/* Draggable Card */}
+          <motion.div
+            drag
+            dragConstraints={containerRef}
+            dragElastic={0.2}
+            onDrag={handleDrag}
+            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(217,56,58,0.6)" }}
+            whileTap={{ scale: 0.95 }}
+            className="w-48 h-64 bg-gradient-to-br from-[rgba(107,15,26,0.8)] to-[rgba(20,10,10,0.9)] border border-hu-gold rounded-xl cursor-grab active:cursor-grabbing flex flex-col items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.3)] z-10"
+          >
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 mb-4">
+              <path d="M12 2C12 2 5 8 5 14C5 17.866 8.13401 21 12 21C15.866 21 19 17.866 19 14C19 8 12 2 12 2Z" fill="#d9383a" fillOpacity="0.8" />
+              <path d="M12 2C12 2 8 8 8 13C8 15.2091 9.79086 17 12 17C14.2091 17 16 15.2091 16 13C16 8 12 2 12 2Z" fill="#d4af37" />
+            </svg>
+            <span className="font-poppins font-medium text-hu-gold">Drag Me</span>
+          </motion.div>
         </div>
       </motion.div>
     </section>

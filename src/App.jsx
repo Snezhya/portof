@@ -10,6 +10,7 @@ import OSExperience from './components/OSExperience';
 import Projects from './components/Projects';
 import Gallery from './components/Gallery';
 import InteractiveFire from './components/InteractiveFire';
+import SocialMedia from './components/SocialMedia';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 
@@ -38,6 +39,7 @@ function App() {
           <Projects />
           <Gallery />
           <InteractiveFire />
+          <SocialMedia />
           <Contact />
         </main>
 
