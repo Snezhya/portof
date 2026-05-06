@@ -12,7 +12,7 @@ const Footer = () => {
         <a href="https://github.com/Snezhya" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-hu-glow transition-colors">
           <Github size={24} />
         </a>
-        <a href="https://www.tiktok.com/@snezhya" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-hu-glow transition-colors font-bold text-lg leading-none">
+        <a href="https://www.tiktok.com/@snezhya_" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-hu-glow transition-colors font-bold text-lg leading-none">
           TK1
         </a>
         <a href="https://www.tiktok.com/@snezhyaa" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-hu-glow transition-colors font-bold text-lg leading-none">
