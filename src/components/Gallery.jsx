@@ -12,12 +12,12 @@ const Gallery = () => {
   const galleryRef = useRef(null);
 
   const images = [
-    { id: 1, src: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&q=80", height: "h-64", alt: "Server Configuration" },
-    { id: 2, src: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&q=80", height: "h-96", alt: "Network Cabling" },
-    { id: 3, src: "https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=800&q=80", height: "h-72", alt: "Linux Terminal Setup" },
-    { id: 4, src: "https://images.unsplash.com/photo-1551739440-5dd934d3a94a?w=800&q=80", height: "h-80", alt: "Hardware Building" },
-    { id: 5, src: "https://images.unsplash.com/photo-1600861194942-f883de0dfe96?w=800&q=80", height: "h-64", alt: "Data Center" },
-    { id: 6, src: "https://images.unsplash.com/photo-1562813733-b31f71025d54?w=800&q=80", height: "h-96", alt: "Code Editor" }
+    { id: 1, src: "image/IMG_20260414_230422_852.png", height: "h-64", alt: "my bini" },
+    { id: 2, src: "image/hu tao/130037376_p0_master1200.webp", height: "h-96", alt: "my bini" },
+    { id: 3, src: "image/hu tao/0270c0b929c3bbe8dfc36d3d1ed1bead.jpg", height: "h-72", alt: "my bini" },
+    { id: 4, src: "image/hu tao/130416928_p1_master1200.webp", height: "h-80", alt: "my bini" },
+    { id: 5, src: "image/hu tao/141856799_p0_master1200.webp", height: "h-64", alt: "my bini" },
+    { id: 6, src: "image/hu tao/7e831bb954cb1ecaec685fc7622ceab9.jpg", height: "h-96", alt: "my bini" }
   ];
 
   useEffect(() => {
