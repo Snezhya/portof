@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply cursor-none scroll-smooth;
+  }
+}
+
+/* Background Animation */
+@keyframes float {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(30px, 50px); }
+}
+
+.bg-shape {
+  @apply fixed rounded-full filter blur-[150px] -z-10 animate-[float_10s_infinite_alternate_ease-in-out];
+}
