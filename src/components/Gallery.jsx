@@ -12,12 +12,14 @@ const Gallery = () => {
   const galleryRef = useRef(null);
 
   const images = [
-    { id: 1, src: "image/IMG_20260414_230422_852.png", height: "h-64", alt: "my bini" },
-    { id: 2, src: "image/hu tao/130037376_p0_master1200.webp", height: "h-96", alt: "my bini" },
-    { id: 3, src: "image/hu tao/0270c0b929c3bbe8dfc36d3d1ed1bead.jpg", height: "h-72", alt: "my bini" },
-    { id: 4, src: "image/hu tao/130416928_p1_master1200.webp", height: "h-80", alt: "my bini" },
-    { id: 5, src: "image/hu tao/141856799_p0_master1200.webp", height: "h-64", alt: "my bini" },
-    { id: 6, src: "image/hu tao/7e831bb954cb1ecaec685fc7622ceab9.jpg", height: "h-96", alt: "my bini" }
+    { id: 1, src: "/image/IMG_20260414_230422_852.png", height: "h-64", alt: "My Photo" },
+    { id: 2, src: "/image/hu-tao/130037376_p0_master1200.webp", height: "h-96", alt: "Hu Tao Art 1" },
+    { id: 3, src: "/image/hu-tao/130416928_p0_master1200.webp", height: "h-72", alt: "Hu Tao Art 2" },
+    { id: 4, src: "/image/hu-tao/141856799_p0_master1200.webp", height: "h-80", alt: "Hu Tao Art 3" },
+    { id: 5, src: "/image/hu-tao/141774813_p0_master1200.webp", height: "h-96", alt: "Hu Tao Art 4" },
+    { id: 6, src: "/image/hu-tao/137879289_p2_master1200.webp", height: "h-72", alt: "Hu Tao Art 5" },
+    { id: 7, src: "/image/hu-tao/0270c0b929c3bbe8dfc36d3d1ed1bead.jpg", height: "h-64", alt: "Hu Tao Art 6" },
+    { id: 8, src: "/image/hu-tao/7e831bb954cb1ecaec685fc7622ceab9.jpg", height: "h-80", alt: "Hu Tao Art 7" }
   ];
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import profileImg from '../../image/IMG_20260414_230828_784.png';
+import profileImg from '../../public/image/IMG_20260414_230828_784.png';
 import { Github, Mail, Phone } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
