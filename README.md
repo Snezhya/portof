@@ -1,6 +1,6 @@
 # Hu Tao Inspired Developer Portfolio
 
-A highly professional, interactive, and aesthetic developer portfolio website inspired by Hu Tao from Genshin Impact. Built to be a modern React application utilizing Vite, TailwindCSS, and Framer Motion, delivering premium interactive features and smooth animations.
+A highly interactive, and aesthetic developer portfolio website inspired by Hu Tao from Genshin Impact. Built to be a modern React application utilizing Vite, TailwindCSS, and Framer Motion, delivering premium interactive features and smooth animations.
 
 ## 🚀 Features
 
