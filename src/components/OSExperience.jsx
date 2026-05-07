@@ -2,19 +2,19 @@ import React from 'react';
 
 const osList = [
   {
-    icon: '🐧',
+    iconSrc: '/image/linux-logo.webp',
     name: 'Linux',
     color: '#6cc24a',
     subtitle: 'Arch Linux, Debian, Ubuntu, Fedora, Linux Mint, Ubuntu Server, OpenMediaVault, and TrueNAS.',
   },
   {
-    icon: '🔄',
+    iconSrc: '/image/routerOS.webp',
     name: 'RouterOS',
     color: '#ff6b35',
     subtitle: 'MikroTik RouterOS for networking, routing, firewall, and VPN management.',
   },
   {
-    icon: '🪟',
+    iconSrc: '/image/windows-logo.png',
     name: 'Windows',
     color: '#0078d4',
     subtitle: 'Windows desktop environments, software compatibility, gaming, and productivity workflows.',
@@ -39,10 +39,14 @@ const OSExperience = () => {
             data-animate
           >
             <div
-              className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full text-3xl shadow-[0_0_20px_rgba(217,56,58,0.2)]"
-              style={{ backgroundColor: `${os.color}15`, color: os.color }}
+              className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(255,255,255,0.05)] shadow-[0_0_20px_rgba(217,56,58,0.2)]"
+              style={{ backgroundColor: `${os.color}15` }}
             >
-              {os.icon}
+              <img
+                src={os.iconSrc}
+                alt={`${os.name} logo`}
+                className="h-10 w-10 object-contain"
+              />
             </div>
             <h3 className="text-2xl font-poppins font-semibold text-white mb-3">{os.name}</h3>
             <p className="text-gray-400 leading-relaxed">{os.subtitle}</p>

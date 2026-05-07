@@ -51,7 +51,7 @@ const Contact = () => {
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      viewport={{ once: true }}
+      viewport={{ once: false, amount: 0.25 }}
     >
       <h2 className="text-4xl md:text-5xl font-poppins font-bold text-center mb-16 text-white" data-animate>
         Get In <span className="text-hu-glow drop-shadow-[0_0_15px_rgba(217,56,58,0.4)]">Touch</span>

@@ -95,8 +95,8 @@ const Hero = () => {
           <a href="https://github.com/Snezhya" target="_blank" rel="noreferrer" className="p-3 rounded-full border border-[rgba(212,175,55,0.15)] bg-[rgba(20,10,10,0.7)] text-gray-200 hover:bg-hu-red hover:text-white hover:border-hu-glow hover:shadow-[0_0_20px_rgba(217,56,58,0.6)] transition-all">
             <Github size={24} />
           </a>
-          <a href="https://www.tiktok.com/@snezhya_" target="_blank" rel="noreferrer" className="p-3 rounded-full border border-[rgba(212,175,55,0.15)] bg-[rgba(20,10,10,0.7)] text-gray-200 hover:bg-hu-red hover:text-white hover:border-hu-glow hover:shadow-[0_0_20px_rgba(217,56,58,0.6)] transition-all font-bold">
-            TK
+          <a href="https://www.tiktok.com/@snezhya_" target="_blank" rel="noreferrer" className="p-3 rounded-full border border-[rgba(212,175,55,0.15)] bg-[rgba(20,10,10,0.7)] text-gray-200 hover:bg-hu-red hover:text-white hover:border-hu-glow hover:shadow-[0_0_20px_rgba(217,56,58,0.6)] transition-all">
+            <img src="/image/tiktok-logo.webp" alt="TikTok" className="h-6 w-6 object-contain" />
           </a>
         </motion.div>
       </div>

@@ -22,21 +22,23 @@ export const useSectionScrollTriggers = () => {
         willChange: 'transform, opacity',
       });
 
-      gsap.to(targets, {
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        ease: 'power3.out',
-        stagger: 0.12,
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 80%',
-          end: 'bottom top',
-          toggleActions: 'play reverse play reverse',
-          markers: false,
-          invalidateOnRefresh: true,
-        },
+      targets.forEach((target) => {
+        gsap.to(target, {
+          opacity: 1,
+          y: 0,
+          duration: 1.2,
+          ease: 'power3.out',
+          stagger: 0.12,
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: target,
+            start: 'top 90%',
+            end: 'bottom 10%',
+            toggleActions: 'play reverse play reverse',
+            markers: false,
+            invalidateOnRefresh: true,
+          },
+        });
       });
     });
 

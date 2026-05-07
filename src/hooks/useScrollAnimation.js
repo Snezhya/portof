@@ -29,7 +29,7 @@ export const useScrollAnimation = (ref, options = {}) => {
     const elements = ref.current.querySelectorAll(selector);
     if (elements.length === 0) return;
 
-    // Buat timeline untuk setiap elemen
+    // Buat timeline untuk setiap elemen secara individual
     elements.forEach((el, index) => {
       gsap.fromTo(
         el,
@@ -40,10 +40,12 @@ export const useScrollAnimation = (ref, options = {}) => {
           ease,
           delay: index * stagger,
           scrollTrigger: {
-            trigger: ref.current,
+            trigger: el,
             start,
+            end: 'bottom top',
+            toggleActions,
             markers: false, // Set true untuk debugging
-            toggleActions, // play reverse play reverse = replay ketika scroll balik
+            invalidateOnRefresh: true,
           },
         }
       );

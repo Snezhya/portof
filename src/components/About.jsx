@@ -57,7 +57,7 @@ const About = () => {
               <span>github.com/Snezhya</span>
             </div>
             <div className="flex items-center gap-3 text-gray-300">
-              <span className="font-bold text-hu-gold w-[18px] text-center">TK</span>
+              <span className="font-bold text-hu-gold w-[18px] text-center"><img src="public/image/tiktok-logo.webp" alt="" srcset="" /></span>
               <span>@snezhya_ / @snezhyaa</span>
             </div>
           </div>
