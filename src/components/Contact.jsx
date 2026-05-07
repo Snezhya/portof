@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Phone, Send, CheckCircle } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import emailjs from '@emailjs/browser';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,16 +33,27 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      
-      setTimeout(() => {
-        setIsSuccess(false);
-        e.target.reset();
-      }, 3000);
-    }, 1500);
+    // Setup EmailJS:
+    // 1. Go to https://www.emailjs.com/ and create an account
+    // 2. Create an email service (e.g., Gmail)
+    // 3. Create an email template with variables: {{from_name}}, {{from_email}}, {{message}}
+    // 4. Set the recipient email to awgrtopls5@gmail.com
+    // 5. Replace the placeholders below with your actual IDs from EmailJS dashboard
+    emailjs.sendForm('your_service_id', 'your_template_id', e.target, 'your_public_key')
+      .then((result) => {
+        console.log(result.text);
+        setIsSubmitting(false);
+        setIsSuccess(true);
+        
+        setTimeout(() => {
+          setIsSuccess(false);
+          e.target.reset();
+        }, 3000);
+      }, (error) => {
+        console.log(error.text);
+        setIsSubmitting(false);
+        // You can add error handling here
+      });
   };
 
   const waMessage = "Halo Adil, saya melihat portfolio Anda dan tertarik untuk berdiskusi!";
@@ -69,13 +81,13 @@ const Contact = () => {
             </div>
           </a>
 
-          <a href="mailto:awgrtopls@gmail.com" className="flex items-center gap-6 p-6 bg-[rgba(20,10,10,0.7)] border border-[rgba(212,175,55,0.15)] rounded-2xl hover:border-hu-gold hover:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all group">
+          <a href="mailto:awgrtopls5@gmail.com" className="flex items-center gap-6 p-6 bg-[rgba(20,10,10,0.7)] border border-[rgba(212,175,55,0.15)] rounded-2xl hover:border-hu-gold hover:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all group">
             <div className="p-4 bg-[rgba(107,15,26,0.3)] text-hu-glow rounded-full group-hover:bg-hu-glow group-hover:text-white transition-colors shadow-[0_0_10px_rgba(217,56,58,0.3)]">
               <Mail size={28} />
             </div>
             <div>
               <p className="text-sm text-gray-400 mb-1">Email</p>
-              <p className="text-lg font-semibold text-gray-200">awgrtopls@gmail.com</p>
+              <p className="text-lg font-semibold text-gray-200">awgrtopls5@gmail.com</p>
             </div>
           </a>
         </div>
@@ -107,6 +119,7 @@ const Contact = () => {
               <input 
                 type="text" 
                 id="name"
+                name="name"
                 required
                 onFocus={() => setIsFocused('name')}
                 onBlur={() => setIsFocused(null)}
@@ -122,6 +135,7 @@ const Contact = () => {
               <input 
                 type="email" 
                 id="email"
+                name="email"
                 required
                 onFocus={() => setIsFocused('email')}
                 onBlur={() => setIsFocused(null)}
@@ -136,6 +150,7 @@ const Contact = () => {
             <div className="relative pt-4">
               <textarea 
                 id="message"
+                name="message"
                 required
                 rows="4"
                 onFocus={() => setIsFocused('message')}

@@ -12,14 +12,14 @@ const Gallery = () => {
   const galleryRef = useRef(null);
 
   const images = [
-    { id: 1, src: "/image/IMG_20260414_230422_852.png", height: "h-64", alt: "My Photo" },
-    { id: 2, src: "/image/IMG_20260414_230422_852.png", height: "h-96", alt: "Hu Tao Art 1" },
-    { id: 3, src: "/image/IMG_20260414_230422_852.png", height: "h-72", alt: "Hu Tao Art 2" },
-    { id: 4, src: "/image/IMG_20260414_230422_852.png", height: "h-80", alt: "Hu Tao Art 3" },
-    { id: 5, src: "/image/IMG_20260414_230422_852.png", height: "h-96", alt: "Hu Tao Art 4" },
-    { id: 6, src: "/image/IMG_20260414_230422_852.png", height: "h-72", alt: "Hu Tao Art 5" },
-    { id: 7, src: "/image/IMG_20260414_230422_852.png", height: "h-64", alt: "Hu Tao Art 6" },
-    { id: 8, src: "/image/IMG_20260414_230422_852.png", height: "h-80", alt: "Hu Tao Art 7" }
+    { id: 1, src: "/image//gallery/image-1.jpg", height: "h-64", alt: "My Photo" },
+    { id: 2, src: "/image//gallery/image-2.jpg", height: "h-96", alt: "Hu Tao Art 1" },
+    { id: 3, src: "/image//gallery/image-3.jpg", height: "h-72", alt: "Hu Tao Art 2" },
+    { id: 4, src: "/image//gallery/image-4.jpg", height: "h-80", alt: "Hu Tao Art 3" },
+    { id: 5, src: "/image//gallery/image-5.png", height: "h-96", alt: "Hu Tao Art 4" },
+    { id: 6, src: "/image//gallery/image-6.png", height: "h-72", alt: "Hu Tao Art 5" },
+    { id: 7, src: "/image//gallery/image-7.jpg", height: "h-64", alt: "Hu Tao Art 6" },
+    { id: 8, src: "/image//gallery/image-8.jpg", height: "h-80", alt: "Hu Tao Art 7" }
   ];
 
   useEffect(() => {

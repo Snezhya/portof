@@ -88,7 +88,7 @@ const About = () => {
             </div>
             <div className="flex items-center gap-3 text-gray-300">
               <span className="font-bold text-hu-gold w-[18px] text-center">TK</span>
-              <span>@snezhya / @snezhyaa</span>
+              <span>@snezhya_ / @snezhyaa</span>
             </div>
           </div>
 
