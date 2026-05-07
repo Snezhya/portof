@@ -12,7 +12,7 @@ const galleryItems = [
     src: '/image/gallery/image-1.jpg',
     title: 'Command Center',
     category: 'Setup',
-    cols: 'col-span-2 md:col-span-3 xl:col-span-3',
+    cols: 'col-span-2 md:col-span-2 xl:col-span-2',
     rows: 'row-span-2',
     parallax: true,
   },
@@ -21,7 +21,7 @@ const galleryItems = [
     src: '/image/gallery/image-2.jpg',
     title: 'Terminal Flow',
     category: 'Linux',
-    cols: 'col-span-2 md:col-span-1 xl:col-span-2',
+    cols: 'col-span-2 md:col-span-1 xl:col-span-1',
     rows: 'row-span-2',
     parallax: true,
   },
@@ -55,7 +55,7 @@ const galleryItems = [
     src: '/image/gallery/image-6.png',
     title: 'Studio Angle',
     category: 'Photography',
-    cols: 'col-span-2 md:col-span-1 xl:col-span-2',
+    cols: 'col-span-2 md:col-span-1 xl:col-span-1',
     rows: 'row-span-2',
   },
   {
@@ -144,12 +144,12 @@ const Gallery = () => {
         </p>
       </div>
 
-      <div className="relative mx-auto mt-16 grid gap-6 md:grid-cols-3 xl:grid-cols-6">
+      <div className="relative mx-auto mt-16 grid gap-4 md:grid-cols-3 xl:grid-cols-6">
         {galleryItems.map((item, idx) => (
           <motion.div
             key={item.id}
             data-animate
-            className={`${item.cols} ${item.rows} relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[rgba(10,5,5,0.9)] shadow-[0_20px_70px_rgba(0,0,0,0.35)] transition-transform duration-500 hover:-translate-y-2`}
+            className={`${item.cols} ${item.rows} relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[rgba(10,5,5,0.9)] shadow-[0_20px_70px_rgba(0,0,0,0.35)] transition-transform duration-500 hover:-translate-y-2 max-h-[500px]`}
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
             onClick={() => setSelectedImageIndex(idx)}

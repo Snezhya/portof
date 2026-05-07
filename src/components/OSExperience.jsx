@@ -5,7 +5,13 @@ const osList = [
     icon: '🐧',
     name: 'Linux',
     color: '#6cc24a',
-    subtitle: 'Arch Linux, Debian, Ubuntu, Fedora, Linux Mint, Ubuntu Server, RouterOS,and OpenMediaVault.',
+    subtitle: 'Arch Linux, Debian, Ubuntu, Fedora, Linux Mint, Ubuntu Server, OpenMediaVault, and TrueNAS.',
+  },
+  {
+    icon: '🔄',
+    name: 'RouterOS',
+    color: '#ff6b35',
+    subtitle: 'MikroTik RouterOS for networking, routing, firewall, and VPN management.',
   },
   {
     icon: '🪟',
