@@ -26,7 +26,6 @@ const InteractiveFire = () => {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
-    // Throttle particle creation slightly
     if (Math.random() > 0.5) {
       createParticle(x, y);
     }
@@ -38,14 +37,20 @@ const InteractiveFire = () => {
     const x = info.point.x - rect.left;
     const y = info.point.y - rect.top;
     createParticle(x, y);
-    createParticle(x + 10, y + 10);
   };
 
   return (
-    <section className="py-24 px-8 md:px-[10%] bg-hu-bg relative overflow-hidden z-10 flex flex-col items-center justify-center border-y border-[rgba(212,175,55,0.1)]">
+    <motion.section
+      className="section py-24 px-8 md:px-[10%] bg-hu-bg relative overflow-hidden z-10 flex flex-col items-center justify-center border-y border-[rgba(212,175,55,0.1)]"
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      viewport={{ once: true }}
+    >
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
         className="max-w-3xl text-center space-y-6 w-full"
+        data-animate
       >
         <h2 className="text-3xl md:text-4xl font-poppins font-bold text-hu-gold mb-4">
           Spirit <span className="text-hu-glow">Realm</span>
@@ -103,7 +108,7 @@ const InteractiveFire = () => {
           </motion.div>
         </div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 };
 

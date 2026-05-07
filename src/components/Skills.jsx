@@ -51,27 +51,23 @@ const Skills = () => {
         stagger: 0.1,
         scrollTrigger: {
           trigger: el,
-          start: "top 75%",
+          start: "top 80%",
+          toggleActions: 'play reverse play reverse',
         }
       }
     );
 
-    // Animate cards
-    gsap.fromTo(containerRef.current.children,
-      { y: 50, opacity: 0 },
-      {
-        y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out',
-        scrollTrigger: {
-          trigger: el,
-          start: "top 75%",
-        }
-      }
-    );
-
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
   }, []);
 
   return (
-    <section id="skills" ref={sectionRef} className="min-h-screen py-24 px-8 md:px-[10%] relative z-10 overflow-hidden">
+    <section 
+      id="skills" 
+      ref={sectionRef} 
+      className="min-h-screen py-24 px-8 md:px-[10%] relative z-10 overflow-hidden section"
+    >
       {/* Code Background */}
       <div className="absolute inset-0 z-0 opacity-[0.03] text-hu-glow font-fira text-sm leading-relaxed pointer-events-none select-none overflow-hidden">
         <motion.div 
@@ -84,7 +80,7 @@ const Skills = () => {
         </motion.div>
       </div>
 
-      <h2 className="text-4xl md:text-5xl font-poppins font-bold text-center mb-16 relative z-10 text-white">
+      <h2 className="text-4xl md:text-5xl font-poppins font-bold text-center mb-16 relative z-10 text-white section-child">
         My <span className="text-hu-glow drop-shadow-[0_0_15px_rgba(217,56,58,0.4)]">Skills</span>
       </h2>
 
@@ -93,6 +89,7 @@ const Skills = () => {
           <div 
             key={skill.title}
             className="group bg-[rgba(20,10,10,0.7)] backdrop-blur-md p-6 rounded-xl border border-[rgba(212,175,55,0.15)] relative overflow-hidden shadow-lg hover:shadow-[0_15px_30px_rgba(0,0,0,0.7),0_0_20px_rgba(107,15,26,0.3)] hover:border-[rgba(212,175,55,0.4)] transition-all duration-300"
+            data-animate
           >
             <div className="flex justify-between items-end mb-3">
               <h4 className="text-lg font-poppins font-semibold text-gray-200 group-hover:text-hu-gold transition-colors">{skill.title}</h4>

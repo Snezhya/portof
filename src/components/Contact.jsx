@@ -1,70 +1,63 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Phone, Send, CheckCircle } from 'lucide-react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import emailjs from '@emailjs/browser';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const Contact = () => {
   const [isFocused, setIsFocused] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  
-  const sectionRef = useRef(null);
-  const contentRef = useRef(null);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    gsap.fromTo(contentRef.current.children,
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1, y: 0, duration: 0.8, stagger: 0.2, ease: 'power3.out',
-        scrollTrigger: {
-          trigger: el,
-          start: "top 75%",
-        }
-      }
-    );
-  }, []);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Setup EmailJS:
-    // 1. Go to https://www.emailjs.com/ and create an account
-    // 2. Create an email service (e.g., Gmail)
-    // 3. Create an email template with variables: {{from_name}}, {{from_email}}, {{message}}
-    // 4. Set the recipient email to awgrtopls5@gmail.com
-    // 5. Replace the placeholders below with your actual IDs from EmailJS dashboard
-    emailjs.sendForm('your_service_id', 'your_template_id', e.target, 'your_public_key')
-      .then((result) => {
-        console.log(result.text);
+
+    const templateParams = {
+      name: formData.name,
+      from_name: formData.name,
+      from_email: formData.email,
+      reply_to: formData.email,
+      message: formData.message,
+      title: 'Contact Us',
+    };
+
+    emailjs.send('service_igb1r6o', 'template_91o46pq', templateParams, 'B0_w_KnQrwEDRpRJK')
+      .then(() => {
         setIsSubmitting(false);
         setIsSuccess(true);
-        
-        setTimeout(() => {
-          setIsSuccess(false);
-          e.target.reset();
-        }, 3000);
-      }, (error) => {
-        console.log(error.text);
+        setErrorMessage('');
+        setFormData({ name: '', email: '', message: '' });
+      })
+      .catch((error) => {
+        const message = error?.text || error?.message || 'Unable to send email. Please check EmailJS settings.';
+        console.error('EmailJS error:', error);
+        setErrorMessage(message);
         setIsSubmitting(false);
-        // You can add error handling here
       });
   };
 
   const waMessage = "Halo Adil, saya melihat portfolio Anda dan tertarik untuk berdiskusi!";
 
   return (
-    <section id="contact" ref={sectionRef} className="min-h-screen py-24 px-8 md:px-[10%] relative z-10 overflow-hidden">
-      <h2 className="text-4xl md:text-5xl font-poppins font-bold text-center mb-16 text-white">
+    <motion.section 
+      id="contact" 
+      className="section min-h-screen py-24 px-8 md:px-[10%] relative z-10 overflow-hidden"
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      viewport={{ once: true }}
+    >
+      <h2 className="text-4xl md:text-5xl font-poppins font-bold text-center mb-16 text-white" data-animate>
         Get In <span className="text-hu-glow drop-shadow-[0_0_15px_rgba(217,56,58,0.4)]">Touch</span>
       </h2>
 
-      <div ref={contentRef} className="flex flex-col lg:flex-row gap-16 justify-center max-w-6xl mx-auto">
+      <div data-animate className="flex flex-col lg:flex-row gap-16 justify-center max-w-6xl mx-auto">
         <div className="flex-1 space-y-8">
           <h3 className="text-3xl font-poppins font-semibold text-hu-gold mb-6">Let's Connect</h3>
           <p className="text-gray-300 text-lg leading-relaxed mb-8">
@@ -115,11 +108,20 @@ const Contact = () => {
           </AnimatePresence>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {errorMessage && (
+              <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-100">
+                <p className="font-semibold">Unable to send message</p>
+                <p>{errorMessage}</p>
+                <p className="mt-2 text-xs text-red-200">If you are using Gmail API in EmailJS, make sure the Gmail API project has the proper `gmail.send` scope enabled and that the service account is authorized.</p>
+              </div>
+            )}
             <div className="relative">
               <input 
                 type="text" 
                 id="name"
                 name="name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
                 onFocus={() => setIsFocused('name')}
                 onBlur={() => setIsFocused(null)}
@@ -136,6 +138,8 @@ const Contact = () => {
                 type="email" 
                 id="email"
                 name="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
                 onFocus={() => setIsFocused('email')}
                 onBlur={() => setIsFocused(null)}
@@ -151,6 +155,8 @@ const Contact = () => {
               <textarea 
                 id="message"
                 name="message"
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 required
                 rows="4"
                 onFocus={() => setIsFocused('message')}
@@ -179,7 +185,7 @@ const Contact = () => {
           </form>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

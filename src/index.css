@@ -15,5 +15,5 @@
 }
 
 .bg-shape {
-  @apply fixed rounded-full filter blur-[150px] -z-10 animate-[float_10s_infinite_alternate_ease-in-out];
+  @apply rounded-full filter blur-[150px] -z-10 animate-[float_10s_infinite_alternate_ease-in-out];
 }
