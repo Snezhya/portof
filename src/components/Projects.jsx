@@ -11,21 +11,21 @@ const projectsData = [
     desc: 'A full-stack web application built with modern technologies.',
     tech: ['React', 'Node.js', 'MongoDB'],
     category: 'Web',
-    image: '/image/routerOS.webp'
+    image: '/image/dummy.png'
   },
   {
     title: 'Website',
     desc: 'A mobile-first application with smooth animations.',
     tech: ['React Native', 'Firebase'],
     category: 'Mobile',
-    image: '/image/tiktok-logo.webp'
+    image: '/image/dummy.png'
   },
   {
     title: 'Python Experimental',
     desc: 'An experimental creative coding project.',
     tech: ['Three.js', 'GSAP', 'WebGL'],
     category: 'Other',
-    image: '/image/linux-logo.webp'
+    image: '/image/dummy.png'
   },
 ];
 

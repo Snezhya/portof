@@ -1,11 +1,7 @@
 import React, { useRef } from 'react';
 import { Github, Mail, Phone, MapPin } from 'lucide-react';
-import { useParallax } from '../hooks/useScrollAnimation';
 
 const About = () => {
-  const imageRef = useRef(null);
-  useParallax(imageRef, 0.5);
-
   return (
     <section 
       id="about" 
@@ -16,14 +12,13 @@ const About = () => {
           About <span className="text-hu-glow drop-shadow-[0_0_20px_rgba(217,56,58,0.5)]">Me</span>
         </h2>
 
-        <div className="flex flex-col lg:flex-row items-center gap-20">
+        <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
           <div 
-            ref={imageRef}
-            className="flex-1 flex justify-center w-full"
+            className="flex-1 flex justify-center md:justify-end w-full"
             data-animate
             data-gsap-type="slide-right"
           >
-            <div className="group relative w-72 h-80 md:w-96 md:h-[480px] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl">
+            <div className="group relative w-64 sm:w-80 md:w-full md:max-w-[420px] aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl">
               <div className="absolute inset-0 bg-gradient-to-tr from-hu-red/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
               <img 
                 src="/image/IMG_20260414_230828_784.png" 
