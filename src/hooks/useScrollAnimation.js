@@ -5,125 +5,101 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * Hook untuk menghandle GSAP ScrollTrigger animations pada elemen
- * Animasi akan di-replay ketika scroll kembali ke atas
- * @param {React.RefObject} ref - Ref ke section element
- * @param {Object} options - Konfigurasi animasi
+ * Hook for smooth scroll-driven parallax effects
  */
-export const useScrollAnimation = (ref, options = {}) => {
-  const {
-    selector = '[data-animate]', // Selector untuk elemen yang akan dianimasi
-    fromVars = { opacity: 0, y: 80 }, // state awal
-    toVars = { opacity: 1, y: 0 }, // state akhir
-    duration = 1,
-    stagger = 0.1,
-    ease = 'power3.out',
-    start = 'top 80%',
-    toggleActions = 'play reverse play reverse', // play ketika masuk, reverse ketika keluar
-  } = options;
-
+export const useParallax = (ref, speed = 1) => {
   useEffect(() => {
     if (!ref.current) return;
 
-    // Ambil semua elemen yang akan dianimasi
-    const elements = ref.current.querySelectorAll(selector);
-    if (elements.length === 0) return;
-
-    // Buat timeline untuk setiap elemen secara individual
-    elements.forEach((el, index) => {
-      gsap.fromTo(
-        el,
-        fromVars,
-        {
-          ...toVars,
-          duration,
-          ease,
-          delay: index * stagger,
-          scrollTrigger: {
-            trigger: el,
-            start,
-            end: 'bottom top',
-            toggleActions,
-            markers: false, // Set true untuk debugging
-            invalidateOnRefresh: true,
-          },
+    const mm = gsap.matchMedia();
+    
+    mm.add("(min-width: 1024px)", () => {
+      gsap.to(ref.current, {
+        y: (i, target) => -ScrollTrigger.maxScroll(window) * (speed * 0.1),
+        ease: "none",
+        scrollTrigger: {
+          trigger: ref.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
         }
-      );
+      });
     });
 
-    return () => {
-      // Cleanup ScrollTrigger ketika component unmount
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-    };
-  }, []);
+    return () => mm.revert();
+  }, [speed]);
 };
 
 /**
- * Hook untuk menghandle section header animation
+ * Hook for text reveal animations (split-text style)
  */
-export const useSectionHeaderAnimation = (ref) => {
-  useEffect(() => {
-    if (!ref.current) return;
-
-    gsap.fromTo(
-      ref.current,
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: ref.current,
-          start: 'top 80%',
-          toggleActions: 'play reverse play reverse',
-          markers: false,
-        },
-      }
-    );
-
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-    };
-  }, []);
-};
-
-/**
- * Hook untuk menghandle multiple element animations dengan stagger
- */
-export const useStaggerAnimation = (ref, elements, options = {}) => {
+export const useTextReveal = (ref, options = {}) => {
   const {
-    fromVars = { opacity: 0, y: 80 },
-    toVars = { opacity: 1, y: 0 },
-    duration = 0.8,
-    stagger = 0.1,
-    ease = 'power3.out',
-    start = 'top 80%',
-    toggleActions = 'play reverse play reverse',
+    type = 'chars',
+    stagger = 0.02,
+    duration = 1,
+    delay = 0
   } = options;
 
   useEffect(() => {
-    if (!ref.current || !elements || elements.length === 0) return;
+    if (!ref.current) return;
 
-    gsap.fromTo(
-      elements,
-      fromVars,
-      {
-        ...toVars,
-        duration,
-        ease,
-        stagger,
+    const text = ref.current.innerText;
+    ref.current.innerHTML = text.split('').map(char => 
+      `<span class="inline-block overflow-hidden"><span class="reveal-item inline-block">${char === ' ' ? '&nbsp;' : char}</span></span>`
+    ).join('');
+
+    const items = ref.current.querySelectorAll('.reveal-item');
+    
+    gsap.fromTo(items, 
+      { y: '100%', opacity: 0 },
+      { 
+        y: '0%', 
+        opacity: 1, 
+        duration, 
+        stagger, 
+        delay,
+        ease: "power4.out",
         scrollTrigger: {
           trigger: ref.current,
-          start,
-          toggleActions,
-          markers: false,
-        },
+          start: "top 90%",
+          toggleActions: "play none none reverse"
+        }
       }
     );
+  }, []);
+};
 
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-    };
-  }, [elements, duration, stagger]);
+/**
+ * Hook for staggered grid/list animations
+ */
+export const useStaggerAnimation = (ref, selector, options = {}) => {
+  const {
+    stagger = 0.1,
+    duration = 0.8,
+    y = 50,
+    opacity = 0
+  } = options;
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const elements = ref.current.querySelectorAll(selector);
+    
+    gsap.fromTo(elements,
+      { y, opacity },
+      {
+        y: 0,
+        opacity: 1,
+        duration,
+        stagger,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ref.current,
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+  }, [selector]);
 };

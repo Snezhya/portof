@@ -1,55 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
 
 const CustomCursor = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
+  const dotRef = useRef(null);
+  const ringRef = useRef(null);
 
   useEffect(() => {
-    const updateMousePosition = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+    const dotSetterX = gsap.quickSetter(dotRef.current, "x", "px");
+    const dotSetterY = gsap.quickSetter(dotRef.current, "y", "px");
+    const ringSetterX = gsap.quickSetter(ringRef.current, "x", "px");
+    const ringSetterY = gsap.quickSetter(ringRef.current, "y", "px");
+
+    const moveCursor = (e) => {
+      dotSetterX(e.clientX);
+      dotSetterY(e.clientY);
+      gsap.to(ringRef.current, {
+        x: e.clientX,
+        y: e.clientY,
+        duration: 0.3,
+        ease: "power2.out"
+      });
     };
 
-    const handleMouseOver = (e) => {
+    const handleHover = (e) => {
       if (e.target.closest('a') || e.target.closest('button')) {
-        setIsHovering(true);
+        gsap.to(dotRef.current, { scale: 3, opacity: 0.5, duration: 0.3 });
+        gsap.to(ringRef.current, { scale: 1.5, borderColor: '#d9383a', backgroundColor: 'rgba(217, 56, 58, 0.1)', duration: 0.3 });
       } else {
-        setIsHovering(false);
+        gsap.to(dotRef.current, { scale: 1, opacity: 1, duration: 0.3 });
+        gsap.to(ringRef.current, { scale: 1, borderColor: '#d4af37', backgroundColor: 'transparent', duration: 0.3 });
       }
     };
 
-    window.addEventListener('mousemove', updateMousePosition);
-    window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('mouseover', handleHover);
 
     return () => {
-      window.removeEventListener('mousemove', updateMousePosition);
-      window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('mousemove', moveCursor);
+      window.removeEventListener('mouseover', handleHover);
     };
   }, []);
 
   return (
     <>
-      <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-hu-glow rounded-full pointer-events-none z-[9999] shadow-[0_0_10px_#d9383a]"
-        animate={{
-          x: mousePosition.x - 4,
-          y: mousePosition.y - 4,
-          scale: isHovering ? 2.5 : 1,
-          backgroundColor: isHovering ? 'transparent' : '#d9383a',
-          border: isHovering ? '1px solid #d9383a' : 'none'
-        }}
-        transition={{ type: 'tween', ease: 'backOut', duration: 0.15 }}
+      <div
+        ref={dotRef}
+        className="fixed top-0 left-0 w-2 h-2 bg-hu-glow rounded-full pointer-events-none z-[9999] shadow-[0_0_10px_#d9383a] -translate-x-1/2 -translate-y-1/2"
       />
-      <motion.div
-        className="fixed top-0 left-0 w-8 h-8 border border-hu-gold rounded-full pointer-events-none z-[9998]"
-        animate={{
-          x: mousePosition.x - 16,
-          y: mousePosition.y - 16,
-          scale: isHovering ? 1.5 : 1,
-          backgroundColor: isHovering ? 'rgba(217, 56, 58, 0.1)' : 'transparent',
-          borderColor: isHovering ? 'transparent' : '#d4af37'
-        }}
-        transition={{ type: 'tween', ease: 'easeOut', duration: 0.3 }}
+      <div
+        ref={ringRef}
+        className="fixed top-0 left-0 w-8 h-8 border border-hu-gold rounded-full pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2"
       />
     </>
   );

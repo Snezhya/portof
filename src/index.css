@@ -3,8 +3,14 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply cursor-none scroll-smooth;
+  html, body {
+    @apply cursor-none bg-black text-white;
+  }
+  
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 }
 

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -7,7 +6,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Skills = () => {
   const sectionRef = useRef(null);
-  const containerRef = useRef(null);
+  const codeBgRef = useRef(null);
   const [codeLines, setCodeLines] = useState([]);
 
   useEffect(() => {
@@ -29,86 +28,93 @@ const Skills = () => {
     setCodeLines(lines);
   }, []);
 
-  const skills = [
-    { title: "Linux Administration", level: 50 },
-    { title: "Network Routing & Mikrotik", level: 50 },
-    { title: "Hardware & PC Building", level: 50 },
-    { title: "Python & Bash Automation", level: 50 },
-    { title: "React & Next.js", level: 50 },
-    { title: "Server Configuration (Apache/Nginx)", level: 30 }
-  ];
-
   useEffect(() => {
-    const el = sectionRef.current;
-    
+    // Infinite scrolling code background using GSAP
+    if (codeBgRef.current) {
+      gsap.to(codeBgRef.current, {
+        y: "-50%",
+        duration: 40,
+        ease: "none",
+        repeat: -1
+      });
+    }
+
     // Animate progress bars
-    gsap.fromTo(".progress-fill", 
-      { width: "0%" },
-      { 
-        width: (i, target) => `${target.dataset.level}%`, 
-        duration: 1.5, 
-        ease: "power3.out",
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: el,
-          start: "top 80%",
-          toggleActions: 'play reverse play reverse',
+    const progressFills = gsap.utils.toArray(".progress-fill");
+    progressFills.forEach((fill) => {
+      gsap.fromTo(fill, 
+        { width: "0%" },
+        { 
+          width: `${fill.dataset.level}%`, 
+          duration: 2, 
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: fill,
+            start: "top 95%",
+            toggleActions: 'play none none reverse',
+          }
         }
-      }
-    );
+      );
+    });
 
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
-  }, []);
+  }, [codeLines]);
+
+  const skills = [
+    { title: "Linux Administration", level: 90 },
+    { title: "Network Routing & Mikrotik", level: 85 },
+    { title: "Hardware & PC Building", level: 95 },
+    { title: "Python & Bash Automation", level: 80 },
+    { title: "React & Next.js", level: 75 },
+    { title: "Server Configuration", level: 85 }
+  ];
 
   return (
     <section 
       id="skills" 
       ref={sectionRef} 
-      className="min-h-screen py-24 px-8 md:px-[10%] relative z-10 overflow-hidden section"
+      className="section min-h-screen py-24 px-8 md:px-[10%] relative z-10 overflow-hidden bg-hu-bg"
     >
       {/* Code Background */}
       <div className="absolute inset-0 z-0 opacity-[0.03] text-hu-glow font-fira text-sm leading-relaxed pointer-events-none select-none overflow-hidden">
-        <motion.div 
-          animate={{ y: ["0%", "-50%"] }} 
-          transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
-          className="flex flex-col"
-        >
+        <div ref={codeBgRef} className="flex flex-col">
           {codeLines.map((line, i) => <div key={i}>{line}</div>)}
           {codeLines.map((line, i) => <div key={i+'dup'}>{line}</div>)}
-        </motion.div>
+        </div>
       </div>
 
-      <h2 className="text-4xl md:text-5xl font-poppins font-bold text-center mb-16 relative z-10 text-white section-child">
-        My <span className="text-hu-glow drop-shadow-[0_0_15px_rgba(217,56,58,0.4)]">Skills</span>
-      </h2>
+      <div className="max-w-6xl mx-auto relative z-10">
+        <h2 className="text-4xl md:text-6xl font-poppins font-bold text-center mb-20 text-white" data-animate data-gsap-type="reveal">
+          My <span className="text-hu-glow drop-shadow-[0_0_20px_rgba(217,56,58,0.5)]">Proficiency</span>
+        </h2>
 
-      <div ref={containerRef} className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-        {skills.map((skill, index) => (
-          <div 
-            key={skill.title}
-            className="group bg-[rgba(20,10,10,0.7)] backdrop-blur-md p-6 rounded-xl border border-[rgba(212,175,55,0.15)] relative overflow-hidden shadow-lg hover:shadow-[0_15px_30px_rgba(0,0,0,0.7),0_0_20px_rgba(107,15,26,0.3)] hover:border-[rgba(212,175,55,0.4)] transition-all duration-300"
-            data-animate
-          >
-            <div className="flex justify-between items-end mb-3">
-              <h4 className="text-lg font-poppins font-semibold text-gray-200 group-hover:text-hu-gold transition-colors">{skill.title}</h4>
-              <span className="text-sm text-gray-400 font-fira">{skill.level}%</span>
-            </div>
-            
-            {/* Custom Progress Bar matching shadcn style but with Hu Tao theme */}
-            <div className="h-2 w-full bg-[rgba(212,175,55,0.1)] rounded-full overflow-hidden relative">
-              <div 
-                className="progress-fill h-full bg-gradient-to-r from-hu-red to-hu-glow rounded-full shadow-[0_0_10px_rgba(217,56,58,0.8)] relative"
-                data-level={skill.level}
-                style={{ width: "0%" }}
-              >
-                {/* Glow effect at the tip */}
-                <div className="absolute right-0 top-0 bottom-0 w-2 bg-white blur-[2px] opacity-50"></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {skills.map((skill, index) => (
+            <div 
+              key={skill.title}
+              className="group bg-white/5 backdrop-blur-xl p-8 rounded-[2rem] border border-white/10 hover:border-hu-gold/30 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+              data-animate
+              data-gsap-type="fade-up"
+              data-gsap-delay={index * 0.1}
+            >
+              <div className="flex justify-between items-end mb-4">
+                <h4 className="text-xl font-poppins font-bold text-gray-200 group-hover:text-hu-gold transition-colors">{skill.title}</h4>
+                <span className="text-sm text-hu-gold font-fira font-bold">{skill.level}%</span>
+              </div>
+              
+              <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden relative border border-white/5">
+                <div 
+                  className="progress-fill h-full bg-gradient-to-r from-hu-red via-hu-glow to-hu-gold rounded-full relative"
+                  data-level={skill.level}
+                >
+                  <div className="absolute right-0 top-0 bottom-0 w-4 bg-white/30 blur-[4px]"></div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
