@@ -60,12 +60,12 @@ const Skills = () => {
   }, { dependencies: [codeLines], scope: sectionRef });
 
   const skills = [
-    { title: "Linux Administration", level: 90 },
-    { title: "Network Routing & Mikrotik", level: 85 },
-    { title: "Hardware & PC Building", level: 95 },
-    { title: "Python & Bash Automation", level: 80 },
-    { title: "React & Next.js", level: 75 },
-    { title: "Server Configuration", level: 85 }
+    { title: "Linux Administration", level: 30 },
+    { title: "Network Routing & Mikrotik", level: 30 },
+    { title: "Hardware & PC Building", level: 30 },
+    { title: "Python & Bash Automation", level: 30 },
+    { title: "React & Next.js", level: 30 },
+    { title: "Server Configuration", level: 30 }
   ];
 
   return (
