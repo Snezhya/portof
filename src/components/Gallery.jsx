@@ -134,13 +134,13 @@ const Gallery = () => {
 
       <div className="relative z-10 mx-auto max-w-7xl text-center">
         <div className="mb-12 inline-flex items-center justify-center rounded-full bg-black/60 px-5 py-2 text-sm uppercase tracking-[0.35em] text-red-300 ring-1 ring-red-500/20 shadow-[0_0_40px_rgba(217,56,58,0.12)]">
-          Momentum Gallery
+          GALLERY
         </div>
         <h2 className="mt-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl" data-animate>
           Gallery
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm text-gray-400 sm:text-base">
-          A premium visual study of environment, network systems, and creative interface concepts.
+          {/* A premium visual study of environment, network systems, and creative interface concepts. */}
         </p>
       </div>
 
@@ -149,18 +149,17 @@ const Gallery = () => {
           <motion.div
             key={item.id}
             data-animate
-            className={`${item.cols} ${item.rows} relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[rgba(10,5,5,0.9)] shadow-[0_20px_70px_rgba(0,0,0,0.35)] transition-transform duration-500 hover:-translate-y-2 max-h-[500px]`}
+            className={`${item.cols} ${item.rows} relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[rgba(10,5,5,0.9)] shadow-[0_20px_70px_rgba(0,0,0,0.35)] transition-transform duration-500 hover:-translate-y-2 max-h-[500px] group cursor-pointer`}
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
             onClick={() => setSelectedImageIndex(idx)}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-transparent via-black/10 to-black/70 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-            <div className={`absolute inset-0 ${item.parallax ? 'gallery-parallax' : ''}`} />
+            <div className="absolute inset-0 bg-gradient-to-br from-transparent via-black/10 to-black/70 opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none" />
             <img
               src={item.src}
               alt={item.title}
               loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              className={`h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 ${item.parallax ? 'gallery-parallax' : ''}`}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
             <div className="relative z-10 flex h-full flex-col justify-end p-6">
