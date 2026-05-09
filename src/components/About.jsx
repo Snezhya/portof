@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import profileImg from '../../public/image/IMG_20260414_230828_784.png';
 import { Github, Mail, Phone, MapPin } from 'lucide-react';
 import { useParallax } from '../hooks/useScrollAnimation';
 
@@ -27,7 +26,7 @@ const About = () => {
             <div className="group relative w-72 h-80 md:w-96 md:h-[480px] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl">
               <div className="absolute inset-0 bg-gradient-to-tr from-hu-red/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
               <img 
-                src={profileImg} 
+                src="/image/IMG_20260414_230828_784.png" 
                 alt="Profile" 
                 className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" 
               />

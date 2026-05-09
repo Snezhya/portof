@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import CustomCursor from './components/CustomCursor';
 import LoadingScreen from './components/LoadingScreen';
 import Navbar from './components/Navbar';
@@ -56,15 +57,19 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
+  useGSAP(() => {
     if (!showLoading) {
-      gsap.to(mainRef.current, {
-        opacity: 1,
-        duration: 1.5,
-        ease: "power2.inOut"
-      });
+      gsap.fromTo(mainRef.current, 
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 1.5,
+          ease: "power2.inOut",
+          onComplete: () => ScrollTrigger.refresh()
+        }
+      );
     }
-  }, [showLoading]);
+  }, { dependencies: [showLoading], scope: mainRef });
 
   return (
     <>
@@ -72,7 +77,7 @@ function App() {
       
       {showLoading && <LoadingScreen onComplete={() => setShowLoading(false)} />}
 
-      <div ref={mainRef} className="opacity-0">
+      <div ref={mainRef} className="">
         <div className="bg-shape w-[400px] h-[400px] bg-hu-red fixed top-[-100px] left-[-100px] opacity-40"></div>
         <div className="bg-shape w-[300px] h-[300px] bg-hu-gold fixed bottom-[-100px] right-[-100px] opacity-15"></div>
 

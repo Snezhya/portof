@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -8,14 +9,14 @@ gsap.registerPlugin(ScrollTrigger);
  * Hook for smooth scroll-driven parallax effects
  */
 export const useParallax = (ref, speed = 1) => {
-  useEffect(() => {
+  useGSAP(() => {
     if (!ref.current) return;
 
     const mm = gsap.matchMedia();
     
     mm.add("(min-width: 1024px)", () => {
       gsap.to(ref.current, {
-        y: (i, target) => -ScrollTrigger.maxScroll(window) * (speed * 0.1),
+        y: () => -ScrollTrigger.maxScroll(window) * (speed * 0.1),
         ease: "none",
         scrollTrigger: {
           trigger: ref.current,
@@ -27,7 +28,7 @@ export const useParallax = (ref, speed = 1) => {
     });
 
     return () => mm.revert();
-  }, [speed]);
+  }, { dependencies: [speed], scope: ref });
 };
 
 /**
@@ -41,13 +42,16 @@ export const useTextReveal = (ref, options = {}) => {
     delay = 0
   } = options;
 
-  useEffect(() => {
+  useGSAP(() => {
     if (!ref.current) return;
 
-    const text = ref.current.innerText;
-    ref.current.innerHTML = text.split('').map(char => 
-      `<span class="inline-block overflow-hidden"><span class="reveal-item inline-block">${char === ' ' ? '&nbsp;' : char}</span></span>`
-    ).join('');
+    // Only split text once
+    if (!ref.current.querySelector('.reveal-item')) {
+      const text = ref.current.innerText;
+      ref.current.innerHTML = text.split('').map(char => 
+        `<span class="inline-block overflow-hidden"><span class="reveal-item inline-block">${char === ' ' ? '&nbsp;' : char}</span></span>`
+      ).join('');
+    }
 
     const items = ref.current.querySelectorAll('.reveal-item');
     
@@ -67,7 +71,7 @@ export const useTextReveal = (ref, options = {}) => {
         }
       }
     );
-  }, []);
+  }, { scope: ref });
 };
 
 /**
@@ -81,10 +85,11 @@ export const useStaggerAnimation = (ref, selector, options = {}) => {
     opacity = 0
   } = options;
 
-  useEffect(() => {
+  useGSAP(() => {
     if (!ref.current) return;
 
     const elements = ref.current.querySelectorAll(selector);
+    if (!elements.length) return;
     
     gsap.fromTo(elements,
       { y, opacity },
@@ -101,5 +106,5 @@ export const useStaggerAnimation = (ref, selector, options = {}) => {
         }
       }
     );
-  }, [selector]);
+  }, { dependencies: [selector], scope: ref });
 };

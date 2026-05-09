@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,10 +19,11 @@ const galleryItems = [
 
 const Gallery = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const containerRef = useRef(null);
   const lightboxRef = useRef(null);
   const lightboxImgRef = useRef(null);
 
-  useEffect(() => {
+  useGSAP(() => {
     // Parallax effect for gallery images
     const images = gsap.utils.toArray('.gallery-img');
     images.forEach((img) => {
@@ -36,11 +38,7 @@ const Gallery = () => {
         },
       });
     });
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
+  }, { scope: containerRef });
 
   useEffect(() => {
     if (selectedImageIndex !== null) {
@@ -85,7 +83,7 @@ const Gallery = () => {
   };
 
   return (
-    <section id="gallery" className="section relative overflow-hidden py-24 px-6 sm:px-8 lg:px-16">
+    <section ref={containerRef} id="gallery" className="section relative overflow-hidden py-24 px-6 sm:px-8 lg:px-16">
       <div className="relative z-10 mx-auto max-w-7xl text-center">
         <h2 className="text-4xl md:text-6xl font-poppins font-bold mb-6 text-white" data-animate data-gsap-type="reveal">
           Visual <span className="text-hu-glow drop-shadow-[0_0_20px_rgba(217,56,58,0.5)]">Gallery</span>

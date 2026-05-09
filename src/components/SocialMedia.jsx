@@ -74,8 +74,6 @@ const SocialMedia = () => {
               onMouseEnter={() => handleMouseEnter(idx, social.color)}
               onMouseLeave={() => handleMouseLeave(idx)}
               className="social-tile group relative flex flex-col items-center gap-6 p-10 rounded-[2.5rem] bg-white/5 border border-white/10 transition-all duration-300 w-full sm:w-64"
-              data-animate
-              data-gsap-type="fade-up"
             >
               <div className="social-icon text-gray-400 group-hover:text-white transition-colors duration-300">
                 <social.icon size={48} strokeWidth={1.5} />

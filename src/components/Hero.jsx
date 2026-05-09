@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Github, ChevronDown } from 'lucide-react';
 import gsap from 'gsap';
 import { useParallax } from '../hooks/useScrollAnimation';
+import { useGSAP } from '@gsap/react';
 
 const Hero = () => {
   const words = ["Student", "Tech Enthusiast", "Linux User", "Network Engineer"];
@@ -38,7 +39,7 @@ const Hero = () => {
   }, []);
 
   // Entrance Timeline
-  useEffect(() => {
+  useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
     tl.fromTo('.hero-subtitle', 
@@ -70,7 +71,7 @@ const Hero = () => {
       { opacity: 1, y: 0, duration: 1, repeat: -1, yoyo: true },
       "-=0.2"
     );
-  }, []);
+  }, { scope: containerRef });
 
   // Typing Effect
   useEffect(() => {
@@ -107,25 +108,25 @@ const Hero = () => {
       <div ref={blob2Ref} className="parallax-blob absolute bg-hu-gold w-48 h-48 sm:w-[400px] sm:h-[400px] rounded-full mix-blend-screen filter blur-[150px] opacity-10 bottom-[-10%] right-[-10%]"></div>
 
       <div className="max-w-4xl text-center relative z-20">
-        <h3 className="hero-subtitle text-xl sm:text-2xl text-hu-gold font-medium mb-4 uppercase tracking-[0.2em] opacity-0">
+        <h3 className="hero-subtitle text-xl sm:text-2xl text-hu-gold font-medium mb-4 uppercase tracking-[0.2em] ">
           Hi, I'm
         </h3>
         
-        <h1 ref={nameRef} className="hero-name text-4xl sm:text-6xl md:text-8xl font-poppins font-extrabold mb-6 leading-tight opacity-0">
+        <h1 ref={nameRef} className="hero-name text-4xl sm:text-6xl md:text-8xl font-poppins font-extrabold mb-6 leading-tight ">
           Adil Pribadi Abdinusa <br />
           <span className="text-hu-glow drop-shadow-[0_0_30px_rgba(217,56,58,0.4)] flex justify-center items-center h-12 sm:h-20 md:h-24" ref={textRef}>
           </span>
         </h1>
 
-        <p className="hero-desc text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-12 font-inter leading-relaxed opacity-0">
+        <p className="hero-desc text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-12 font-inter leading-relaxed ">
           Building networks, configuring servers, and exploring the mysterious world of technology.
         </p>
 
         <div className="flex flex-wrap justify-center gap-6 mb-16">
-          <a href="#projects" className="hero-btn px-10 py-4 bg-hu-red text-white font-poppins font-semibold rounded-full shadow-[0_10px_30px_rgba(107,15,26,0.4)] hover:bg-hu-glow hover:shadow-[0_15px_40px_rgba(217,56,58,0.5)] hover:-translate-y-2 transition-all duration-300 opacity-0">
+          <a href="#projects" className="hero-btn px-10 py-4 bg-hu-red text-white font-poppins font-semibold rounded-full shadow-[0_10px_30px_rgba(107,15,26,0.4)] hover:bg-hu-glow hover:shadow-[0_15px_40px_rgba(217,56,58,0.5)] hover:-translate-y-2 transition-all duration-300 ">
             View My Work
           </a>
-          <a href="#contact" className="hero-btn px-10 py-4 border-2 border-hu-gold text-hu-gold font-poppins font-semibold rounded-full hover:bg-hu-gold hover:text-black hover:shadow-[0_10px_30px_rgba(212,175,55,0.3)] hover:-translate-y-2 transition-all duration-300 opacity-0">
+          <a href="#contact" className="hero-btn px-10 py-4 border-2 border-hu-gold text-hu-gold font-poppins font-semibold rounded-full hover:bg-hu-gold hover:text-black hover:shadow-[0_10px_30px_rgba(212,175,55,0.3)] hover:-translate-y-2 transition-all duration-300 ">
             Contact Me
           </a>
         </div>
@@ -143,7 +144,7 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="scroll-indicator absolute bottom-10 left-1/2 -translate-x-1/2 text-hu-gold opacity-0">
+      <div className="scroll-indicator absolute bottom-10 left-1/2 -translate-x-1/2 text-hu-gold ">
         <a href="#about" className="flex flex-col items-center gap-2">
           <span className="text-[10px] uppercase tracking-[0.3em] font-bold">Scroll</span>
           <ChevronDown size={32} />

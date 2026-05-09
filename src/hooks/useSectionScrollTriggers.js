@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const useSectionScrollTriggers = () => {
-  useEffect(() => {
+  useGSAP(() => {
     const mm = gsap.matchMedia();
 
     mm.add({
@@ -86,5 +86,5 @@ export const useSectionScrollTriggers = () => {
     });
 
     return () => mm.revert();
-  }, []);
+  });
 };

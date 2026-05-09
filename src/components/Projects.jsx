@@ -97,8 +97,6 @@ const Projects = () => {
             <div
               key={project.title}
               className="project-card group bg-[rgba(15,8,8,0.8)] border border-white/10 rounded-3xl overflow-hidden hover:border-hu-glow/50 transition-colors duration-500"
-              data-animate
-              data-gsap-type="scale-up"
             >
               <div className="relative h-48 overflow-hidden">
                 <img 

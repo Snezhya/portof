@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 const LoadingScreen = ({ onComplete }) => {
   const screenRef = useRef(null);
@@ -7,7 +8,7 @@ const LoadingScreen = ({ onComplete }) => {
   const titleRef = useRef(null);
   const textRef = useRef(null);
 
-  useEffect(() => {
+  useGSAP(() => {
     const tl = gsap.timeline();
 
     // Entrance
@@ -50,7 +51,7 @@ const LoadingScreen = ({ onComplete }) => {
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, [onComplete]);
+  }, { dependencies: [onComplete], scope: screenRef });
 
   return (
     <div 

@@ -32,8 +32,6 @@ const OSExperience = () => {
             <article
               key={os.name}
               className="os-card group relative rounded-[2.5rem] border border-white/10 bg-white/5 p-10 text-center shadow-2xl transition-all duration-500 hover:border-hu-gold/30 hover:-translate-y-3"
-              data-animate
-              data-gsap-type="scale-up"
             >
               <div
                 className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-[2rem] bg-white/5 shadow-inner group-hover:scale-110 transition-transform duration-500"

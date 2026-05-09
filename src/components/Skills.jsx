@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,7 +29,7 @@ const Skills = () => {
     setCodeLines(lines);
   }, []);
 
-  useEffect(() => {
+  useGSAP(() => {
     // Infinite scrolling code background using GSAP
     if (codeBgRef.current) {
       gsap.to(codeBgRef.current, {
@@ -56,11 +57,7 @@ const Skills = () => {
         }
       );
     });
-
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-    };
-  }, [codeLines]);
+  }, { dependencies: [codeLines], scope: sectionRef });
 
   const skills = [
     { title: "Linux Administration", level: 90 },
@@ -87,7 +84,7 @@ const Skills = () => {
 
       <div className="max-w-6xl mx-auto relative z-10">
         <h2 className="text-4xl md:text-6xl font-poppins font-bold text-center mb-20 text-white" data-animate data-gsap-type="reveal">
-          My <span className="text-hu-glow drop-shadow-[0_0_20px_rgba(217,56,58,0.5)]">Proficiency</span>
+          My <span className="text-hu-glow drop-shadow-[0_0_20px_rgba(217,56,58,0.5)]">Skill</span>
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
