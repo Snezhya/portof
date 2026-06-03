@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { Cpu, Terminal, ShieldCheck, Server, GitBranch, Monitor } from 'lucide-react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 const skills = [
   { icon: Cpu, title: 'Linux', description: 'CLI workflows, package management, shell environments, and Linux-based development.', tone: 'from-[#ff4d4d] via-[#c1272d] to-[#8e0a10]' },
@@ -13,6 +14,42 @@ const skills = [
 
 const TechnicalSkills = () => {
   const cardsRef = useRef([]);
+  const sectionRef = useRef(null);
+
+  useGSAP(() => {
+    // Reveal section title and subtitle
+    gsap.from(".tech-title", {
+      scrollTrigger: { trigger: ".tech-title", start: "top 85%" },
+      opacity: 0,
+      y: -30,
+      duration: 0.8,
+      ease: "power3.out"
+    });
+
+    gsap.from(".tech-subtitle", {
+      scrollTrigger: { trigger: ".tech-subtitle", start: "top 85%" },
+      opacity: 0,
+      y: 20,
+      duration: 0.6,
+      ease: "power2.out",
+      delay: 0.2
+    });
+
+    // Stagger reveal skill cards
+    gsap.from(".tech-card", {
+      scrollTrigger: {
+        trigger: ".tech-grid",
+        start: "top 80%"
+      },
+      opacity: 0,
+      y: 50,
+      scale: 0.9,
+      stagger: 0.1,
+      duration: 0.7,
+      ease: "back.out(1.5)"
+    });
+
+  }, { scope: sectionRef });
 
   const handleMouseMove = (e, index) => {
     const card = cardsRef.current[index];
@@ -55,18 +92,18 @@ const TechnicalSkills = () => {
   };
 
   return (
-    <section id="technical-skills" className="section relative overflow-hidden py-24 px-6 sm:px-8 lg:px-16 bg-hu-bg-light">
+    <section id="technical-skills" ref={sectionRef} className="section relative overflow-hidden py-24 px-6 sm:px-8 lg:px-16 bg-hu-bg-light">
       <div className="relative z-10 mx-auto max-w-7xl">
         <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-6xl font-poppins font-bold mb-6 text-white" data-animate data-gsap-type="reveal">
+          <h2 className="tech-title text-4xl md:text-6xl font-poppins font-bold mb-6 text-white">
             Technical <span className="text-hu-glow">Arsenal</span>
           </h2>
-          <p className="max-w-2xl mx-auto text-gray-400" data-animate data-gsap-delay="0.2">
+          <p className="tech-subtitle max-w-2xl mx-auto text-gray-400">
             The core technologies and tools that power my technical workflows and developments.
           </p>
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="tech-grid grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {skills.map((skill, index) => {
             const Icon = skill.icon;
             return (
@@ -75,10 +112,7 @@ const TechnicalSkills = () => {
                 ref={el => cardsRef.current[index] = el}
                 onMouseMove={(e) => handleMouseMove(e, index)}
                 onMouseLeave={() => handleMouseLeave(index)}
-                className="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 p-10 backdrop-blur-xl transition-all duration-500 hover:border-hu-glow/30"
-                data-animate
-                data-gsap-type="blur-in"
-                data-gsap-delay={index * 0.1}
+                className="tech-card group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 p-10 backdrop-blur-xl transition-all duration-500 hover:border-hu-glow/30"
               >
                 {/* Mouse Spotlight */}
                 <div className="spotlight pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500 rounded-[2.5rem]" 

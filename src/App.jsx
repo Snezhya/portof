@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Lenis from 'lenis';
+import React, { useState, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -19,7 +18,16 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import { useSectionScrollTriggers } from './hooks/useSectionScrollTriggers';
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(
+    ScrollTrigger,
+    window.ScrollSmoother,
+    window.SplitText,
+    window.Flip,
+    window.CustomEase,
+    window.ScrambleTextPlugin
+  );
+}
 
 function App() {
   const [showLoading, setShowLoading] = useState(true);
@@ -27,37 +35,18 @@ function App() {
   
   useSectionScrollTriggers();
 
-  useEffect(() => {
-    // Initialize Lenis
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-      infinite: false,
-    });
-
-    // Synchronize Lenis with GSAP ScrollTrigger
-    lenis.on('scroll', ScrollTrigger.update);
-
-    const updateLenis = (time) => {
-      lenis.raf(time * 1000);
-    };
-
-    gsap.ticker.add(updateLenis);
-    gsap.ticker.lagSmoothing(0);
-
-    return () => {
-      lenis.destroy();
-      gsap.ticker.remove(updateLenis);
-    };
-  }, []);
-
   useGSAP(() => {
+    // Initialize ScrollSmoother
+    if (window.ScrollSmoother) {
+      window.ScrollSmoother.create({
+        wrapper: "#smooth-wrapper",
+        content: "#smooth-content",
+        smooth: 1.5,
+        smoothTouch: 0.1,
+        effects: true
+      });
+    }
+
     if (!showLoading) {
       gsap.fromTo(mainRef.current, 
         { opacity: 0 },
@@ -69,7 +58,7 @@ function App() {
         }
       );
     }
-  }, { dependencies: [showLoading], scope: mainRef });
+  }, { dependencies: [showLoading] });
 
   return (
     <>
@@ -77,26 +66,30 @@ function App() {
       
       {showLoading && <LoadingScreen onComplete={() => setShowLoading(false)} />}
 
-      <div ref={mainRef} className="">
-        <div className="bg-shape w-[400px] h-[400px] bg-hu-red fixed top-[-100px] left-[-100px] opacity-40"></div>
-        <div className="bg-shape w-[300px] h-[300px] bg-hu-gold fixed bottom-[-100px] right-[-100px] opacity-15"></div>
+      <div id="smooth-wrapper">
+        <div id="smooth-content">
+          <div ref={mainRef} className="">
+            <div className="bg-shape w-[400px] h-[400px] bg-hu-red fixed top-[-100px] left-[-100px] opacity-40"></div>
+            <div className="bg-shape w-[300px] h-[300px] bg-hu-gold fixed bottom-[-100px] right-[-100px] opacity-15"></div>
 
-        <Navbar />
-        
-        <main>
-          <Hero />
-          <About />
-          <Skills />
-          <TechnicalSkills />
-          <OSExperience />
-          <Projects />
-          <Gallery />
+            <Navbar />
+            
+            <main>
+              <Hero />
+              <About />
+              <Skills />
+              <TechnicalSkills />
+              <OSExperience />
+              <Projects />
+              <Gallery />
 
-          <SocialMedia />
-          <Contact />
-        </main>
+              <SocialMedia />
+              <Contact />
+            </main>
 
-        <Footer />
+            <Footer />
+          </div>
+        </div>
       </div>
     </>
   );

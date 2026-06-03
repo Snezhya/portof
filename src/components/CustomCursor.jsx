@@ -1,56 +1,82 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 const CustomCursor = () => {
+  const cursorRef = useRef(null);
   const dotRef = useRef(null);
-  const ringRef = useRef(null);
+  const isTouchDevice = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
-  useEffect(() => {
-    const dotSetterX = gsap.quickSetter(dotRef.current, "x", "px");
-    const dotSetterY = gsap.quickSetter(dotRef.current, "y", "px");
-    const ringSetterX = gsap.quickSetter(ringRef.current, "x", "px");
-    const ringSetterY = gsap.quickSetter(ringRef.current, "y", "px");
+  useGSAP(() => {
+    gsap.set(cursorRef.current, { xPercent: -50, yPercent: -50 });
+    gsap.set(dotRef.current, { xPercent: -50, yPercent: -50 });
 
     const moveCursor = (e) => {
-      dotSetterX(e.clientX);
-      dotSetterY(e.clientY);
-      gsap.to(ringRef.current, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.3,
-        ease: "power2.out"
-      });
-    };
-
-    const handleHover = (e) => {
-      if (e.target.closest('a') || e.target.closest('button')) {
-        gsap.to(dotRef.current, { scale: 3, opacity: 0.5, duration: 0.3 });
-        gsap.to(ringRef.current, { scale: 1.5, borderColor: '#d9383a', backgroundColor: 'rgba(217, 56, 58, 0.1)', duration: 0.3 });
-      } else {
-        gsap.to(dotRef.current, { scale: 1, opacity: 1, duration: 0.3 });
-        gsap.to(ringRef.current, { scale: 1, borderColor: '#d4af37', backgroundColor: 'transparent', duration: 0.3 });
-      }
+      gsap.to(cursorRef.current, { x: e.clientX, y: e.clientY, duration: 0.6, ease: "power3.out" });
+      gsap.to(dotRef.current, { x: e.clientX, y: e.clientY, duration: 0.1 });
     };
 
     window.addEventListener('mousemove', moveCursor);
-    window.addEventListener('mouseover', handleHover);
+
+    // Hover effect for cursor scaling
+    const handleHover = (e) => {
+      if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.magnetic-btn')) {
+        gsap.to(dotRef.current, { scale: 3, opacity: 0.5, duration: 0.3 });
+        gsap.to(cursorRef.current, { scale: 1.5, borderColor: '#d9383a', backgroundColor: 'rgba(217, 56, 58, 0.1)', duration: 0.3 });
+      } else {
+        gsap.to(dotRef.current, { scale: 1, opacity: 1, duration: 0.3 });
+        gsap.to(cursorRef.current, { scale: 1, borderColor: '#d9383a', backgroundColor: 'transparent', duration: 0.3 });
+      }
+    };
+
+    // Magnetic Buttons - Event Delegation
+    const handleMouseOver = (e) => {
+      handleHover(e);
+      const btn = e.target.closest('.magnetic-btn');
+      if (btn) {
+        if (!btn._isMagnetic) {
+          btn._isMagnetic = true;
+          const onMove = (moveEvent) => {
+            const rect = btn.getBoundingClientRect();
+            const relX = moveEvent.clientX - rect.left - rect.width / 2;
+            const relY = moveEvent.clientY - rect.top  - rect.height / 2;
+            gsap.to(btn, { x: relX * 0.4, y: relY * 0.4, duration: 0.3, ease: "power2.out" });
+          };
+          const onLeave = () => {
+            btn.removeEventListener('mousemove', onMove);
+            btn.removeEventListener('mouseleave', onLeave);
+            btn._isMagnetic = false;
+            gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+            
+            // reset cursor scale
+            gsap.to(dotRef.current, { scale: 1, opacity: 1, duration: 0.3 });
+            gsap.to(cursorRef.current, { scale: 1, borderColor: '#d9383a', backgroundColor: 'transparent', duration: 0.3 });
+          };
+          btn.addEventListener('mousemove', onMove);
+          btn.addEventListener('mouseleave', onLeave);
+        }
+      }
+    };
+
+    document.addEventListener('mouseover', handleMouseOver);
+    document.addEventListener('mouseout', (e) => {
+      if (!e.target.closest('a') && !e.target.closest('button') && !e.target.closest('.magnetic-btn')) {
+         handleHover(e);
+      }
+    });
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
-      window.removeEventListener('mouseover', handleHover);
+      document.removeEventListener('mouseover', handleMouseOver);
     };
   }, []);
 
+  if (isTouchDevice) return null;
+
   return (
     <>
-      <div
-        ref={dotRef}
-        className="fixed top-0 left-0 w-2 h-2 bg-hu-glow rounded-full pointer-events-none z-[9999] shadow-[0_0_10px_#d9383a] -translate-x-1/2 -translate-y-1/2"
-      />
-      <div
-        ref={ringRef}
-        className="fixed top-0 left-0 w-8 h-8 border border-hu-gold rounded-full pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2"
-      />
+      <div ref={dotRef} className="cursor-dot" />
+      <div ref={cursorRef} className="cursor" />
     </>
   );
 };

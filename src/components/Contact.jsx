@@ -64,42 +64,52 @@ const Contact = () => {
 
   // Cinematic GSAP Animations
   useGSAP(() => {
-    // Section Entrance Animation
-    gsap.from('.contact-header', {
+    const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
-        start: 'top 80%',
-      },
-      y: 50,
-      opacity: 0,
-      duration: 1,
-      ease: 'power3.out'
+        start: "top 65%",
+        toggleActions: "play none none reverse"
+      }
     });
 
-    // Stagger Info Items
-    gsap.from('.info-item', {
-      scrollTrigger: {
-        trigger: '.info-col',
-        start: 'top 80%',
-      },
+    let contactTitle;
+    if (window.SplitText) {
+      contactTitle = new window.SplitText(".contact-header", { type: "chars" });
+      tl.from(contactTitle.chars, {
+        opacity: 0,
+        y: 50,
+        rotateY: 90,
+        stagger: 0.04,
+        duration: 0.6,
+        ease: "back.out(1.7)"
+      });
+    } else {
+      tl.from(".contact-header", { opacity: 0, y: 50, duration: 0.6, ease: "back.out(1.7)" });
+    }
+
+    // Info Column
+    tl.from('.info-item', {
       x: -50,
       opacity: 0,
       duration: 0.8,
       stagger: 0.2,
       ease: 'back.out(1.2)'
-    });
+    }, "-=0.4");
 
-    // Form Entrance
-    gsap.from('.form-container', {
-      scrollTrigger: {
-        trigger: '.form-col',
-        start: 'top 80%',
-      },
-      x: 50,
+    // Form Fields Entrance
+    tl.from('.form-container input:not([type="checkbox"]), .form-container textarea', {
       opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out'
-    });
+      x: -30,
+      stagger: 0.1,
+      duration: 0.5,
+      ease: "power2.out"
+    }, "-=0.4")
+    .from('.contact-submit', {
+      opacity: 0,
+      scale: 0.5,
+      duration: 0.5,
+      ease: "elastic.out(1, 0.5)"
+    }, "-=0.2");
 
     // Floating Parallax for Social Card
     gsap.to('.social-card', {
@@ -109,6 +119,10 @@ const Contact = () => {
       yoyo: true,
       repeat: -1,
     });
+
+    return () => {
+      if (contactTitle) contactTitle.revert();
+    };
   }, { scope: containerRef });
 
   const handleFocus = (e) => {
@@ -433,7 +447,7 @@ const Contact = () => {
                 <button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="group relative w-full py-5 bg-gradient-to-r from-hu-red to-hu-glow text-white font-poppins font-bold rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(217,56,58,0.3)] transition-all hover:shadow-[0_0_40px_rgba(217,56,58,0.6)] disabled:opacity-50 disabled:cursor-not-allowed mt-8 hover:-translate-y-1"
+                  className="contact-submit group relative w-full py-5 bg-gradient-to-r from-hu-red to-hu-glow text-white font-poppins font-bold rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(217,56,58,0.3)] transition-all hover:shadow-[0_0_40px_rgba(217,56,58,0.6)] disabled:opacity-50 disabled:cursor-not-allowed mt-8 hover:-translate-y-1"
                 >
                   <div className="relative z-10 flex items-center justify-center gap-3">
                     {isSubmitting ? (

@@ -1,22 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Github, ChevronDown } from 'lucide-react';
 import gsap from 'gsap';
-import { useParallax } from '../hooks/useScrollAnimation';
 import { useGSAP } from '@gsap/react';
 
 const Hero = () => {
-  const words = ["Student", "Tech Enthusiast", "Linux User", "Network Engineer"];
-  const [wordIndex, setWordIndex] = useState(0);
-  const textRef = useRef(null);
   const containerRef = useRef(null);
-  const nameRef = useRef(null);
   const socialRef = useRef(null);
-  const blob1Ref = useRef(null);
-  const blob2Ref = useRef(null);
-
-  // Scroll Parallax for background blobs
-  useParallax(blob1Ref, 1.5);
-  useParallax(blob2Ref, 0.8);
 
   // Mouse Reactive Effect
   useEffect(() => {
@@ -40,62 +29,99 @@ const Hero = () => {
 
   // Entrance Timeline
   useGSAP(() => {
-    const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+    if (window.CustomEase) {
+      window.CustomEase.create("smoothOut", "M0,0 C0.25,0.1 0.25,1 1,1");
+      window.CustomEase.create("elasticOut", "M0,0 C0,0 0.1,-0.5 0.3,0.8 0.5,1.5 0.7,1.1 1,1");
+    }
 
-    tl.fromTo('.hero-subtitle', 
-      { opacity: 0, y: 30, letterSpacing: '0.5em' },
-      { opacity: 1, y: 0, letterSpacing: '0.2em', duration: 1.5 }
-    )
-    .fromTo('.hero-name',
-      { opacity: 0, scale: 0.9, filter: 'blur(10px)' },
-      { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.2 },
-      "-=1"
-    )
-    .fromTo('.hero-desc',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 1 },
-      "-=0.8"
-    )
-    .fromTo('.hero-btn',
-      { opacity: 0, y: 20, scale: 0.9 },
-      { opacity: 1, y: 0, scale: 1, stagger: 0.2, duration: 0.8 },
-      "-=0.6"
-    )
-    .fromTo(socialRef.current.children,
-      { opacity: 0, scale: 0, rotate: -45 },
-      { opacity: 1, scale: 1, rotate: 0, stagger: 0.1, duration: 0.8, ease: "back.out(1.7)" },
-      "-=0.4"
-    )
-    .fromTo('.scroll-indicator',
-      { opacity: 0, y: -20 },
-      { opacity: 1, y: 0, duration: 1, repeat: -1, yoyo: true },
-      "-=0.2"
-    );
-  }, { scope: containerRef });
+    let heroTitle, heroSub;
+    if (window.SplitText) {
+      heroTitle = new window.SplitText(".hero-name-text", { type: "chars, words" });
+      heroSub = new window.SplitText(".hero-subtitle", { type: "lines" });
+    }
 
-  // Typing Effect
-  useEffect(() => {
-    let currentWord = words[wordIndex];
-    if (textRef.current) {
-      textRef.current.innerHTML = currentWord.split('').map(char => `<span class="letter inline-block">${char === ' ' ? '&nbsp;' : char}</span>`).join('');
-      
-      const tl = gsap.timeline({
+    const tl = gsap.timeline({ defaults: { ease: window.CustomEase ? "smoothOut" : "power4.out" } });
+
+    if (heroTitle && heroTitle.chars) {
+      tl.from(heroTitle.chars, {
+        opacity: 0,
+        y: 80,
+        rotateX: -90,
+        stagger: 0.03,
+        duration: 0.8,
+        transformOrigin: "0% 50% -50"
+      });
+    } else {
+      tl.from('.hero-name-text', { opacity: 0, y: 80, duration: 0.8 });
+    }
+
+    if (heroSub && heroSub.lines) {
+      tl.from(heroSub.lines, {
+        opacity: 0,
+        y: 30,
+        stagger: 0.12,
+        duration: 0.6
+      }, "-=0.4");
+    } else {
+      tl.from('.hero-subtitle', { opacity: 0, y: 30, duration: 0.6 }, "-=0.4");
+    }
+
+    tl.from('.hero-desc', {
+      opacity: 0,
+      y: 20,
+      duration: 1
+    }, "-=0.2")
+    .from('.hero-btn', {
+      opacity: 0,
+      scale: 0.8,
+      duration: 0.5,
+      stagger: 0.2,
+      ease: window.CustomEase ? "elasticOut" : "back.out(1.7)"
+    }, "-=0.2")
+    .from(socialRef.current.children, {
+      opacity: 0,
+      scale: 0,
+      rotate: -45,
+      stagger: 0.1,
+      duration: 0.8,
+      ease: "back.out(1.7)"
+    }, "-=0.4")
+    .from('.scroll-indicator', {
+      opacity: 0,
+      y: -20,
+      duration: 1,
+      repeat: -1,
+      yoyo: true
+    }, "-=0.2");
+
+    // Scramble Text Setup
+    const roles = ["Student", "Tech Enthusiast", "Linux User", "Network Engineer"];
+    let current = 0;
+
+    function scrambleNext() {
+      gsap.to(".hero-role", {
+        duration: 1.2,
+        scrambleText: {
+          text: roles[current % roles.length],
+          chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+          revealDelay: 0.3,
+          speed: 0.4
+        },
         onComplete: () => {
-          setTimeout(() => {
-            setWordIndex((prev) => (prev + 1) % words.length);
-          }, 1500);
+          current++;
+          gsap.delayedCall(2.5, scrambleNext);
         }
       });
-      
-      tl.fromTo(textRef.current.children, 
-        { opacity: 0, y: 15, rotateX: -90 },
-        { opacity: 1, y: 0, rotateX: 0, duration: 0.6, stagger: 0.03, ease: "power2.out" }
-      )
-      .to(textRef.current.children, 
-        { opacity: 0, y: -15, rotateX: 90, duration: 0.4, stagger: 0.02, ease: "power2.in", delay: 1 }
-      );
     }
-  }, [wordIndex]);
+
+    // Start Scramble after entrance
+    gsap.delayedCall(2, scrambleNext);
+
+    return () => {
+      if (heroTitle) heroTitle.revert();
+      if (heroSub) heroSub.revert();
+    };
+  }, { scope: containerRef });
 
   return (
     <section 
@@ -104,17 +130,18 @@ const Hero = () => {
       className="section min-h-screen flex items-center justify-center pt-20 sm:pt-32 px-4 sm:px-8 relative z-10 overflow-hidden"
     >
       {/* Parallax Background Blobs */}
-      <div ref={blob1Ref} className="parallax-blob absolute bg-hu-red w-32 h-32 sm:w-[500px] sm:h-[500px] rounded-full mix-blend-screen filter blur-[120px] opacity-20 top-[-10%] left-[-10%]"></div>
-      <div ref={blob2Ref} className="parallax-blob absolute bg-hu-gold w-48 h-48 sm:w-[400px] sm:h-[400px] rounded-full mix-blend-screen filter blur-[150px] opacity-10 bottom-[-10%] right-[-10%]"></div>
+      <div data-speed="1.2" data-lag="0.2" className="parallax-blob absolute bg-hu-red w-32 h-32 sm:w-[500px] sm:h-[500px] rounded-full mix-blend-screen filter blur-[120px] opacity-20 top-[-10%] left-[-10%]"></div>
+      <div data-speed="0.8" data-lag="0.5" className="parallax-blob absolute bg-hu-gold w-48 h-48 sm:w-[400px] sm:h-[400px] rounded-full mix-blend-screen filter blur-[150px] opacity-10 bottom-[-10%] right-[-10%]"></div>
 
       <div className="max-w-4xl text-center relative z-20">
         <h3 className="hero-subtitle text-xl sm:text-2xl text-hu-gold font-medium mb-4 uppercase tracking-[0.2em] ">
           Hi, I'm
         </h3>
         
-        <h1 ref={nameRef} className="hero-name text-4xl sm:text-6xl md:text-8xl font-poppins font-extrabold mb-6 leading-tight ">
-          Adil Pribadi Abdinusa <br />
-          <span className="text-hu-glow drop-shadow-[0_0_30px_rgba(217,56,58,0.4)] flex justify-center items-center h-12 sm:h-20 md:h-24" ref={textRef}>
+        <h1 className="hero-name text-4xl sm:text-6xl md:text-8xl font-poppins font-extrabold mb-6 leading-tight ">
+          <span className="hero-name-text inline-block">Adil Pribadi Abdinusa</span> <br />
+          <span className="hero-role text-hu-glow drop-shadow-[0_0_30px_rgba(217,56,58,0.4)] flex justify-center items-center h-12 sm:h-20 md:h-24">
+            Student
           </span>
         </h1>
 
@@ -123,22 +150,19 @@ const Hero = () => {
         </p>
 
         <div className="flex flex-wrap justify-center gap-6 mb-16">
-          <a href="#projects" className="hero-btn px-10 py-4 bg-hu-red text-white font-poppins font-semibold rounded-full shadow-[0_10px_30px_rgba(107,15,26,0.4)] hover:bg-hu-glow hover:shadow-[0_15px_40px_rgba(217,56,58,0.5)] hover:-translate-y-2 transition-all duration-300 ">
+          <a href="#projects" className="hero-btn magnetic-btn px-10 py-4 bg-hu-red text-white font-poppins font-semibold rounded-full shadow-[0_10px_30px_rgba(107,15,26,0.4)] hover:bg-hu-glow hover:shadow-[0_15px_40px_rgba(217,56,58,0.5)] transition-colors duration-300 ">
             View My Work
           </a>
-          <a href="#contact" className="hero-btn px-10 py-4 border-2 border-hu-gold text-hu-gold font-poppins font-semibold rounded-full hover:bg-hu-gold hover:text-black hover:shadow-[0_10px_30px_rgba(212,175,55,0.3)] hover:-translate-y-2 transition-all duration-300 ">
+          <a href="#contact" className="hero-btn magnetic-btn px-10 py-4 border-2 border-hu-gold text-hu-gold font-poppins font-semibold rounded-full hover:bg-hu-gold hover:text-black hover:shadow-[0_10px_30px_rgba(212,175,55,0.3)] transition-colors duration-300 ">
             Contact Me
           </a>
         </div>
 
-        <div 
-          ref={socialRef}
-          className="flex justify-center gap-6"
-        >
-          <a href="https://github.com/Snezhya" target="_blank" rel="noreferrer" className="p-4 rounded-full border border-white/10 bg-white/5 text-gray-300 hover:bg-hu-red hover:text-white hover:border-hu-glow hover:shadow-[0_0_25px_rgba(217,56,58,0.4)] hover:-translate-y-2 transition-all duration-300">
+        <div ref={socialRef} className="flex justify-center gap-6">
+          <a href="https://github.com/Snezhya" target="_blank" rel="noreferrer" className="magnetic-btn p-4 rounded-full border border-white/10 bg-white/5 text-gray-300 hover:bg-hu-red hover:text-white hover:border-hu-glow hover:shadow-[0_0_25px_rgba(217,56,58,0.4)] transition-colors duration-300">
             <Github size={28} />
           </a>
-          <a href="https://www.tiktok.com/@snezhya_" target="_blank" rel="noreferrer" className="p-4 rounded-full border border-white/10 bg-white/5 text-gray-300 hover:bg-hu-red hover:text-white hover:border-hu-glow hover:shadow-[0_0_25px_rgba(217,56,58,0.4)] hover:-translate-y-2 transition-all duration-300">
+          <a href="https://www.tiktok.com/@snezhya_" target="_blank" rel="noreferrer" className="magnetic-btn p-4 rounded-full border border-white/10 bg-white/5 text-gray-300 hover:bg-hu-red hover:text-white hover:border-hu-glow hover:shadow-[0_0_25px_rgba(217,56,58,0.4)] transition-colors duration-300">
             <img src="/image/tiktok-logo.webp" alt="TikTok" className="h-7 w-7 object-contain" />
           </a>
         </div>

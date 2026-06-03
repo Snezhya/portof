@@ -23,3 +23,42 @@
 .bg-shape {
   @apply rounded-full filter blur-[150px] -z-10 animate-[float_10s_infinite_alternate_ease-in-out];
 }
+
+/* GSAP SmoothScroll & Setup */
+#smooth-wrapper {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+#smooth-content {
+  overflow: visible;
+  width: 100%;
+}
+
+.cursor {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid #d9383a; /* var(--accent) roughly */
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+}
+.cursor-dot {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  background: #d9383a;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Optimize animations */
+.project-card,
+.section-title,
+.skill-bar-fill,
+.project-img {
+  will-change: transform, opacity;
+}
