@@ -35,28 +35,14 @@ const About = () => {
       ease: "power2.out"
     });
 
-    // SplitText for paragraph
-    let aboutText;
-    if (window.SplitText) {
-      aboutText = new window.SplitText(".about-description", { type: "lines" });
-      gsap.from(aboutText.lines, {
-        scrollTrigger: {
-          trigger: ".about-description",
-          start: "top 85%"
-        },
-        opacity: 0,
-        y: 20,
-        stagger: 0.08,
-        duration: 0.6
-      });
-    } else {
-      gsap.from(".about-description", {
-        scrollTrigger: { trigger: ".about-description", start: "top 85%" },
-        opacity: 0,
-        y: 20,
-        duration: 0.6
-      });
-    }
+    // Reveal paragraph
+    gsap.from(".about-description", {
+      scrollTrigger: { trigger: ".about-description", start: "top 85%" },
+      opacity: 0,
+      y: 20,
+      duration: 0.8,
+      ease: "power2.out"
+    });
 
     // Reveal contact items
     gsap.from(".contact-item", {
@@ -76,10 +62,6 @@ const About = () => {
       duration: 0.5,
       ease: "back.out(1.7)"
     });
-
-    return () => {
-      if (aboutText) aboutText.revert();
-    };
   }, { scope: containerRef });
 
   return (

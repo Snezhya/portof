@@ -1,7 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Flip } from 'gsap/Flip';
+import { TextPlugin } from 'gsap/TextPlugin';
 import { useGSAP } from '@gsap/react';
+import Lenis from 'lenis';
 import CustomCursor from './components/CustomCursor';
 import LoadingScreen from './components/LoadingScreen';
 import Navbar from './components/Navbar';
@@ -21,11 +24,8 @@ import { useSectionScrollTriggers } from './hooks/useSectionScrollTriggers';
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(
     ScrollTrigger,
-    window.ScrollSmoother,
-    window.SplitText,
-    window.Flip,
-    window.CustomEase,
-    window.ScrambleTextPlugin
+    Flip,
+    TextPlugin
   );
 }
 
@@ -35,18 +35,35 @@ function App() {
   
   useSectionScrollTriggers();
 
-  useGSAP(() => {
-    // Initialize ScrollSmoother
-    if (window.ScrollSmoother) {
-      window.ScrollSmoother.create({
-        wrapper: "#smooth-wrapper",
-        content: "#smooth-content",
-        smooth: 1.5,
-        smoothTouch: 0.1,
-        effects: true
-      });
-    }
+  useEffect(() => {
+    // Initialize Lenis
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
+    });
 
+    lenis.on('scroll', ScrollTrigger.update);
+
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      gsap.ticker.remove((time) => lenis.raf(time * 1000));
+      lenis.destroy();
+    };
+  }, []);
+
+  useGSAP(() => {
     if (!showLoading) {
       gsap.fromTo(mainRef.current, 
         { opacity: 0 },
@@ -66,30 +83,26 @@ function App() {
       
       {showLoading && <LoadingScreen onComplete={() => setShowLoading(false)} />}
 
-      <div id="smooth-wrapper">
-        <div id="smooth-content">
-          <div ref={mainRef} className="">
-            <div className="bg-shape w-[400px] h-[400px] bg-hu-red fixed top-[-100px] left-[-100px] opacity-40"></div>
-            <div className="bg-shape w-[300px] h-[300px] bg-hu-gold fixed bottom-[-100px] right-[-100px] opacity-15"></div>
+      <div ref={mainRef} className="">
+        <div className="bg-shape w-[400px] h-[400px] bg-hu-red fixed top-[-100px] left-[-100px] opacity-40 pointer-events-none"></div>
+        <div className="bg-shape w-[300px] h-[300px] bg-hu-gold fixed bottom-[-100px] right-[-100px] opacity-15 pointer-events-none"></div>
 
-            <Navbar />
-            
-            <main>
-              <Hero />
-              <About />
-              <Skills />
-              <TechnicalSkills />
-              <OSExperience />
-              <Projects />
-              <Gallery />
+        <Navbar />
+        
+        <main>
+          <Hero />
+          <About />
+          <Skills />
+          <TechnicalSkills />
+          <OSExperience />
+          <Projects />
+          <Gallery />
 
-              <SocialMedia />
-              <Contact />
-            </main>
+          <SocialMedia />
+          <Contact />
+        </main>
 
-            <Footer />
-          </div>
-        </div>
+        <Footer />
       </div>
     </>
   );

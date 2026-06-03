@@ -72,20 +72,14 @@ const Contact = () => {
       }
     });
 
-    let contactTitle;
-    if (window.SplitText) {
-      contactTitle = new window.SplitText(".contact-header", { type: "chars" });
-      tl.from(contactTitle.chars, {
-        opacity: 0,
-        y: 50,
-        rotateY: 90,
-        stagger: 0.04,
-        duration: 0.6,
-        ease: "back.out(1.7)"
-      });
-    } else {
-      tl.from(".contact-header", { opacity: 0, y: 50, duration: 0.6, ease: "back.out(1.7)" });
-    }
+    tl.from(".contact-char", {
+      opacity: 0,
+      y: 50,
+      rotateY: 90,
+      stagger: 0.04,
+      duration: 0.6,
+      ease: "back.out(1.7)"
+    });
 
     // Info Column
     tl.from('.info-item', {
@@ -119,10 +113,6 @@ const Contact = () => {
       yoyo: true,
       repeat: -1,
     });
-
-    return () => {
-      if (contactTitle) contactTitle.revert();
-    };
   }, { scope: containerRef });
 
   const handleFocus = (e) => {
@@ -286,6 +276,14 @@ const Contact = () => {
     }
   };
 
+  const renderTitleChars = (text) => {
+    return text.split('').map((char, index) => (
+      <span key={index} className="contact-char inline-block whitespace-pre">
+        {char}
+      </span>
+    ));
+  };
+
   return (
     <section id="contact" ref={containerRef} className="section min-h-screen py-24 px-8 md:px-[10%] bg-hu-bg-light relative overflow-hidden">
       
@@ -295,7 +293,10 @@ const Contact = () => {
 
       <div className="max-w-6xl mx-auto relative z-10">
         <h2 className="contact-header text-4xl md:text-6xl font-poppins font-bold text-center mb-20 text-white">
-          Get In <span className="text-hu-glow drop-shadow-[0_0_20px_rgba(217,56,58,0.5)]">Touch</span>
+          {renderTitleChars("Get In ")}
+          <span className="text-hu-glow drop-shadow-[0_0_20px_rgba(217,56,58,0.5)]">
+            {renderTitleChars("Touch")}
+          </span>
         </h2>
 
         <div className="flex flex-col lg:flex-row gap-20">
